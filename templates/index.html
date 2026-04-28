@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breast Cancer Predictor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="light-theme">
+    <div class="page-shell">
+        <header class="topbar reveal visible">
+            <a class="brand-mark" href="{{ url_for('index') }}">
+                <span class="brand-icon">+</span>
+                <div>
+                    <strong>HerHealth AI</strong>
+                    <small>Breast wellness support</small>
+                </div>
+            </a>
+            <nav class="main-nav">
+                <a class="active" href="{{ url_for('index') }}">Prediction</a>
+                <a href="{{ url_for('awareness') }}">Awareness</a>
+            </nav>
+        </header>
+        <header class="hero reveal">
+            <div class="hero-banner">
+                <div class="hero-decor decor-left"></div>
+                <div class="hero-decor decor-right"></div>
+                <div class="hero-ribbon-wrap">
+                    <div class="awareness-ribbon">
+                        <span class="ribbon-band band-left"></span>
+                        <span class="ribbon-band band-right"></span>
+                        <span class="ribbon-loop"></span>
+                    </div>
+                    <div class="floating-bloom bloom-one"></div>
+                    <div class="floating-bloom bloom-two"></div>
+                    <div class="floating-heart heart-one"></div>
+                    <div class="floating-heart heart-two"></div>
+                </div>
+                <div class="hero-copy">
+                    <span class="eyebrow soft">Breast Cancer Awareness</span>
+                    <p class="hero-script">Breast</p>
+                    <h1>CANCER</h1>
+                    <p class="hero-subtitle">Prediction and wellness support</p>
+                    <p>
+                        A softer, awareness-inspired screening experience that combines model-based prediction, supportive design, and women's health guidance in one place.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#predictor" class="primary-button">Start Prediction</a>
+                        <a href="{{ url_for('awareness') }}" class="ghost-button">Read Awareness Guide</a>
+                    </div>
+                    <div class="hero-bullets">
+                        <span>Learn More</span>
+                        <span>Check Risk</span>
+                        <span>Act Early</span>
+                    </div>
+                </div>
+                <div class="hero-side-panel">
+                    <div class="hero-stats">
+                        <div class="stat-card">
+                            <span>Accuracy</span>
+                            <strong>{{ '%.2f'|format(metrics.accuracy * 100) }}%</strong>
+                        </div>
+                        <div class="stat-card">
+                            <span>ROC AUC</span>
+                            <strong>{{ '%.2f'|format(metrics.roc_auc * 100) }}%</strong>
+                        </div>
+                        <div class="stat-card">
+                            <span>Dataset</span>
+                            <strong>{{ dataset_shape.rows }} Samples</strong>
+                        </div>
+                    </div>
+                    <div class="hero-panel">
+                        <div class="hero-panel-inner">
+                            <p class="panel-label">Top Predictive Signals</p>
+                            {% for feature, score in top_features %}
+                                <div class="signal-row">
+                                    <span>{{ feature.replace('_', ' ').title() }}</span>
+                                    <div class="signal-bar">
+                                        <i style="width: {{ '%.2f'|format(score * 100) }}%"></i>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="content-grid" id="predictor">
+            <section class="form-section reveal">
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow soft">Input Panel</span>
+                        <h2>Enter Patient Measurements</h2>
+                    </div>
+                    <button type="button" class="ghost-button" id="fill-median">Fill Median Values</button>
+                </div>
+
+                <form action="{{ url_for('predict') }}" method="post" class="predict-form">
+                    {% for group_key, features in feature_groups.items() %}
+                        <div class="feature-group">
+                            <div class="feature-group-header">
+                                <h3>{{ display_names[group_key] }}</h3>
+                                <p>{{ features|length }} attributes</p>
+                            </div>
+                            <div class="feature-grid">
+                                {% for card in cards if card.name in features %}
+                                    <label class="input-card">
+                                        <span class="input-title">{{ card.label }}</span>
+                                        <input
+                                            type="number"
+                                            step="any"
+                                            name="{{ card.name }}"
+                                            value="{{ defaults[card.name] }}"
+                                            data-default="{{ card.median }}"
+                                            min="{{ card.min }}"
+                                            max="{{ card.max }}"
+                                            required
+                                        >
+                                        <span class="input-meta">Range: {{ card.min }} to {{ card.max }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <div class="action-row">
+                        <button type="submit" class="primary-button">Predict Cancer Risk</button>
+                    </div>
+                </form>
+            </section>
+
+            <aside class="result-section reveal">
+                <div class="section-heading narrow">
+                    <div>
+                        <span class="eyebrow soft">Prediction Output</span>
+                        <h2>Model Result</h2>
+                    </div>
+                </div>
+
+                {% if result %}
+                    <div class="result-card {{ result.tone }}">
+                        <div class="result-ring" style="--progress: {{ result.confidence }}%;">
+                            <div class="result-ring-inner">
+                                <span>Malignant Risk</span>
+                                <strong>{{ result.confidence }}%</strong>
+                            </div>
+                        </div>
+                        <div class="result-copy">
+                            <p class="result-pill">{{ result.diagnosis }}</p>
+                            <h3>{{ result.guidance }}</h3>
+                            <div class="split-metrics">
+                                <div>
+                                    <span>Benign Probability</span>
+                                    <strong>{{ result.benign_percent }}%</strong>
+                                </div>
+                                <div>
+                                    <span>Malignant Probability</span>
+                                    <strong>{{ result.confidence }}%</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="result-card idle">
+                        <div class="pulse-orb"></div>
+                        <h3>Waiting for feature input</h3>
+                        <p>The trained Random Forest model will return a benign or malignant prediction after you submit the measurements.</p>
+                    </div>
+                {% endif %}
+
+                <div class="metric-stack">
+                    <div class="mini-card">
+                        <span>Precision</span>
+                        <strong>{{ '%.2f'|format(metrics.precision * 100) }}%</strong>
+                    </div>
+                    <div class="mini-card">
+                        <span>Recall</span>
+                        <strong>{{ '%.2f'|format(metrics.recall * 100) }}%</strong>
+                    </div>
+                </div>
+                <div class="care-note">
+                    <h3>Health note</h3>
+                    <p>This tool is for awareness and learning support. It should never replace a clinical exam, mammogram, or professional medical advice.</p>
+                    <a href="{{ url_for('awareness') }}" class="text-link">Read symptoms and prevention guidance</a>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

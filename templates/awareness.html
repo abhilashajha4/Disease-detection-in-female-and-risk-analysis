@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breast Health Awareness</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="light-theme">
+    <div class="page-shell">
+        <header class="topbar reveal visible">
+            <a class="brand-mark" href="{{ url_for('index') }}">
+                <span class="brand-icon">+</span>
+                <div>
+                    <strong>HerHealth AI</strong>
+                    <small>Breast wellness support</small>
+                </div>
+            </a>
+            <nav class="main-nav">
+                <a href="{{ url_for('index') }}">Prediction</a>
+                <a class="active" href="{{ url_for('awareness') }}">Awareness</a>
+            </nav>
+        </header>
+
+        <section class="info-hero reveal visible">
+            <div class="info-copy">
+                <span class="eyebrow soft">Breast Cancer Awareness</span>
+                <h1>Supportive information every woman can use</h1>
+                <p>
+                    Early awareness matters. Knowing the common symptoms, healthy lifestyle habits, and when to seek screening can support faster action and better outcomes.
+                </p>
+            </div>
+            <div class="info-hero-art">
+                <img src="{{ url_for('static', filename='images/awareness-poster.png') }}" alt="Breast cancer awareness poster">
+            </div>
+        </section>
+
+        <main class="awareness-layout">
+            <section class="poster-panel reveal">
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow soft">Awareness Poster</span>
+                        <h2>Visual guide inspired by women's health campaigns</h2>
+                    </div>
+                </div>
+                <div class="poster-frame">
+                    <img src="{{ url_for('static', filename='images/awareness-poster.png') }}" alt="Breast cancer infographic poster">
+                </div>
+            </section>
+
+            <section class="info-panel reveal">
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow soft">Symptoms</span>
+                        <h2>Common warning signs</h2>
+                    </div>
+                </div>
+                <div class="info-grid two">
+                    <article class="info-card">
+                        <h3>Lump or thickened tissue</h3>
+                        <p>A new lump in the breast or underarm is one of the most common signs that should be checked by a doctor.</p>
+                    </article>
+                    <article class="info-card">
+                        <h3>Change in breast size or shape</h3>
+                        <p>Noticeable swelling, unusual asymmetry, or a sudden change in contour can be a reason to seek medical advice.</p>
+                    </article>
+                    <article class="info-card">
+                        <h3>Skin changes</h3>
+                        <p>Look for dimpling, redness, scaling, irritation, or skin that starts to resemble an orange peel texture.</p>
+                    </article>
+                    <article class="info-card">
+                        <h3>Nipple changes or discharge</h3>
+                        <p>Inversion, pain, or unexpected discharge, especially if bloody, should be evaluated promptly.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="info-panel reveal">
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow soft">Prevention</span>
+                        <h2>Healthy habits that may lower risk</h2>
+                    </div>
+                </div>
+                <div class="tips-list">
+                    <div class="tip-row">
+                        <span>1</span>
+                        <div>
+                            <h3>Maintain a healthy weight</h3>
+                            <p>Regular movement and balanced nutrition can support hormone balance and overall breast health.</p>
+                        </div>
+                    </div>
+                    <div class="tip-row">
+                        <span>2</span>
+                        <div>
+                            <h3>Exercise regularly</h3>
+                            <p>Aim for consistent physical activity each week, even if it starts with walking, yoga, or home workouts.</p>
+                        </div>
+                    </div>
+                    <div class="tip-row">
+                        <span>3</span>
+                        <div>
+                            <h3>Limit alcohol and avoid smoking</h3>
+                            <p>Reducing these risk factors can help lower the chance of several cancers, including breast cancer.</p>
+                        </div>
+                    </div>
+                    <div class="tip-row">
+                        <span>4</span>
+                        <div>
+                            <h3>Follow screening advice</h3>
+                            <p>Talk with a clinician about family history, mammograms, and the right screening plan for your age and risk level.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="info-panel reveal">
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow soft">Self Care</span>
+                        <h2>Simple breast-health reminders</h2>
+                    </div>
+                </div>
+                <div class="info-grid three">
+                    <article class="soft-card">
+                        <h3>Know your normal</h3>
+                        <p>Become familiar with how your breasts usually look and feel so changes are easier to notice.</p>
+                    </article>
+                    <article class="soft-card">
+                        <h3>Do regular self-checks</h3>
+                        <p>Self-checks do not replace screening, but they can help you notice changes early and seek guidance faster.</p>
+                    </article>
+                    <article class="soft-card">
+                        <h3>Seek help early</h3>
+                        <p>Any unusual symptom deserves attention. Early consultation is often more valuable than waiting to see if it goes away.</p>
+                    </article>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
